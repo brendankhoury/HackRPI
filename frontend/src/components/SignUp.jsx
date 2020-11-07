@@ -18,11 +18,11 @@ const useStyles = makeStyles((theme) => ({
 export default function SignUp() {
     // eslint-disable-next-line
     const { register, handleSubmit, errors } = useForm();
-    const onSubmit = data => console.log(data);
+    const submissionHandler = data => console.log(data);
     const classes = useStyles();
 
     return (
-        <form className={classes.root} onSubmit={onSubmit}>
+        <form className={classes.root} onSubmit={submissionHandler}>
 
             <Grid container spacing={3}>
                 <Grid item xs={12}>

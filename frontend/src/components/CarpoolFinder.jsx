@@ -1,16 +1,6 @@
 import React, { Component } from 'react'
-import { makeStyles } from '@material-ui/core/styles';
-
-
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        display: 'flex',
-        flexWrap: 'wrap',
-        padding: '5em'
-    },
-}),
-);
+import { Grid } from '@material-ui/core'
+import '../Assets/CarpoolFinder.css'
 
 
 const fakeData = [
@@ -34,8 +24,13 @@ const fakeData = [
 export default class CarpoolFinder extends Component {
     render() {
         return (
-            <Grid container classname = {classes.root}>
-
+            <Grid container className="root">
+                {
+                    fakeData.map((val) => 
+                        <h1>
+                            {JSON.stringify(val)}
+                        </h1>)
+                }
             </Grid>
         )
     }

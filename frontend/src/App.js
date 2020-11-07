@@ -9,6 +9,7 @@ import SignUp from './components/SignUp';
 import Login from './components/Login';
 import { Route } from 'react-router';
 import { BrowserRouter, Link } from 'react-router-dom';
+import CarpoolFinder from './components/CarpoolFinder';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,6 +45,7 @@ function App() {
         <Route exact path="/profile">
           Profile not created yet
         </Route>
+        <Route exact path="/carpoolfinder" component={CarpoolFinder}/>
       </BrowserRouter>
     </div>
   );
