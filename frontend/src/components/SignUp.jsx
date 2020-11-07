@@ -2,7 +2,7 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import { Button, Checkbox, FormControlLabel, FormGroup, Grid, Typography } from '@material-ui/core';
+import { Button, Checkbox, FormControlLabel, FormGroup, Grid, Switch, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -111,7 +111,7 @@ export default function SignUp() {
                 </Grid>
                 <Grid item xs={12}>
                     <Grid container spacing={2}>
-                        <Grid item xs={4} justify="center">
+                        <Grid item xs={6} justify="center">
                             <Grid container align="center" justify="center" alignItems="center">
                                 <FormGroup row >
                                     <FormControlLabel
@@ -157,7 +157,7 @@ export default function SignUp() {
                                 </FormGroup>
                             </Grid>
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={2}>
                             <TextField
                                 name="work-start-time"
                                 label="Work Start Time"
@@ -173,7 +173,7 @@ export default function SignUp() {
                                 variant="outlined"
                             />
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={2}>
                             <TextField
                                 name="work-end-time"
                                 label="Work End Time"
@@ -188,6 +188,15 @@ export default function SignUp() {
                                 }}
                                 variant="outlined"
                             />
+                        </Grid>
+                        <Grid item xs={2}>
+                            <FormGroup row >
+                                <FormControlLabel
+                                    value="Sunday"
+                                    control={<Checkbox color="primary" />}
+                                    label="Owns Car?"
+                                    labelPlacement="start" />
+                            </FormGroup>
                         </Grid>
                     </Grid>
                 </Grid>

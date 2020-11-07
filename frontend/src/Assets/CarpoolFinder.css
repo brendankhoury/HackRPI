@@ -1,5 +1,11 @@
-root {
-    display: 'flex';
-    flex-wrap: 'wrap';
-    padding: '5em';
+.CarpoolRoot {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 5em;
+}
+.MailFab {
+    float: right;
+}
+.PersonCard {
+    padding:10px;
 }
