@@ -88,7 +88,7 @@ def signup():
     daysWorked = request.json['daysWorked']
     startTime = request.json['startTime']
     endTime = request.json['endTime']
-    ownCar = request.json['ownsCar']
+    ownsCar = request.json['ownsCar']
     with conn.cursor() as cur:
         cur.execute(
         f"INSERT INTO users (name, email, phone, password, homeAdd, workAdd, daysWorked, startTime, endTime, ownsCar) VALUES {name}, {email}, {phone}, {password}, {homeAdd}, {workAdd}, {daysWorked}, {startTime}, {endTime}, {ownsCar}"
