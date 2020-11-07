@@ -6,6 +6,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import SignUp from './components/SignUp';
+import Login from './components/Login';
+import { Route } from 'react-router';
+import { BrowserRouter, Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,15 +27,24 @@ function App() {
 
   return (
     <div className="App">
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" className={classes.title}>
-            CarpoolCoordinator
+      <BrowserRouter>
+
+        <AppBar position="static">
+          <Toolbar>
+            <Typography variant="h6" className={classes.title}>
+              CarpoolCoordinator
           </Typography>
-          <Button color="inherit">Login</Button>
-        </Toolbar>
-      </AppBar>
-      <SignUp/>
+            <Button component={Link} to="/login" color="inherit">
+              Login
+              </Button>
+          </Toolbar>
+        </AppBar>
+        <Route exact path="/" component={SignUp} />
+        <Route exact path="/login" component={Login} />
+        <Route exact path="/profile">
+          Profile not created yet
+        </Route>
+      </BrowserRouter>
     </div>
   );
 }
