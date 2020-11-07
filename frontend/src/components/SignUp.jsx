@@ -1,4 +1,5 @@
 import React from 'react'
+import {useForm} from 'react-hook-form'
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { Button, Grid, Typography } from '@material-ui/core';
@@ -18,10 +19,12 @@ const useStyles = makeStyles((theme) => ({
 );
 
 export default function SignUp() {
+    const { register, handleSubmit, errors } = useForm();
+    const onSubmit = data => console.log(data);
     const classes = useStyles();
 
     return (
-        <form className={classes.root}>
+        <form className={classes.root} onSubmit={onSubmit}>
             <Typography variant='h3'>
                 Sign Up!
             </Typography>
@@ -29,20 +32,30 @@ export default function SignUp() {
                 <Grid item xs={12}>
                     <Grid container spacing={2}>
                         <Grid item xs={6}>
-                            <TextField fullWidth required label="First Name" variant="outlined" />
+                            <TextField name="last-name" fullWidth required label="First Name" variant="outlined" />
                         </Grid>
                         <Grid item xs={6}>
-                            <TextField fullWidth required label="Last Name" variant="outlined" />
+                            <TextField name="first-name" fullWidth required label="Last Name" variant="outlined" />
                         </Grid>
                     </Grid>
                 </Grid>
                 <Grid item xs={12}>
                     <Grid container spacing={2}>
                         <Grid item xs={6}>
-                            <TextField fullWidth required label="Work Email" variant="outlined" />
+                            <TextField name="work-email" fullWidth required label="Work Email" variant="outlined" />
                         </Grid>
                         <Grid item xs={6}>
-                            <TextField fullWidth label="Phone Number" variant="outlined" />
+                            <TextField name="phone-number" fullWidth label="Phone Number" variant="outlined" />
+                        </Grid>
+                    </Grid>
+                </Grid>
+                <Grid item xs={12}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                            <TextField name="password" type="password" fullWidth required password label="Password" variant="outlined" />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField name="confirm-password" type="password" fullWidth required password label="Confirm Password" variant="outlined" />
                         </Grid>
                     </Grid>
                 </Grid>
@@ -54,19 +67,19 @@ export default function SignUp() {
                 <Grid item xs={12}>
                     <Grid container spacing={2}>
                         <Grid item xs={4}>
-                            <TextField fullWidth required label="Address" variant="outlined" />
+                            <TextField name="home-address" fullWidth required label="Address" variant="outlined" />
                         </Grid>
                         <Grid item xs={4}>
-                            <TextField fullWidth required label="City" variant="outlined" />
+                            <TextField name="home-city" fullWidth required label="City" variant="outlined" />
                         </Grid>
                         <Grid item xs={4}>
-                            <TextField fullWidth required label="Zip Code" variant="outlined" />
+                            <TextField name="home-zip" fullWidth required label="Zip Code" variant="outlined" />
                         </Grid>
                         <Grid item xs={6}>
-                            <TextField fullWidth required label="State" variant="outlined" />
+                            <TextField name="home-state" fullWidth required label="State" variant="outlined" />
                         </Grid>
                         <Grid item xs={6}>
-                            <TextField fullWidth required label="Country" variant="outlined" />
+                            <TextField name="home-country" fullWidth required label="Country" variant="outlined" />
                         </Grid>
                     </Grid>
                 </Grid>
@@ -74,23 +87,24 @@ export default function SignUp() {
                     <Typography variant='h5'>
                         Work Address
                     </Typography>
+                    {/* TODO, add maps api or dropdown menu when the backend is developed */ }
                 </Grid>
                 <Grid item xs={12}>
                     <Grid container spacing={2}>
                         <Grid item xs={4}>
-                            <TextField fullWidth required label="Address" variant="outlined" />
+                            <TextField name="work-address" fullWidth required label="Address" variant="outlined" />
                         </Grid>
                         <Grid item xs={4}>
-                            <TextField fullWidth required label="City" variant="outlined" />
+                            <TextField name="work-city" fullWidth required label="City" variant="outlined" />
                         </Grid>
                         <Grid item xs={4}>
-                            <TextField fullWidth required label="Zip Code" variant="outlined" />
+                            <TextField name="work-zip" fullWidth required label="Zip Code" variant="outlined" />
                         </Grid>
                         <Grid item xs={6}>
-                            <TextField fullWidth required label="State" variant="outlined" />
+                            <TextField name="work-state" fullWidth required label="State" variant="outlined" />
                         </Grid>
                         <Grid item xs={6}>
-                            <TextField fullWidth required label="Country" variant="outlined" />
+                            <TextField name="work-country" fullWidth required label="Country" variant="outlined" />
                         </Grid>
                     </Grid>
                 </Grid>
@@ -100,9 +114,6 @@ export default function SignUp() {
                     </Button>
                 </Grid>
             </Grid>
-
-
-
         </form>
     )
 }
