@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
-  },
+  },  
 }));
 
 function App() {
@@ -33,8 +33,8 @@ function App() {
         <AppBar position="static">
           <Toolbar>
             <Typography variant="h6" className={classes.title}>
-              CarpoolCoordinator
-          </Typography>
+              Carpool Coordinator
+            </Typography>
             <Button component={Link} to="/login" color="inherit">
               Login
               </Button>
@@ -45,7 +45,7 @@ function App() {
         <Route exact path="/profile">
           Profile not created yet
         </Route>
-        <Route exact path="/carpoolfinder" component={CarpoolFinder}/>
+        <Route exact path="/carpoolfinder" component={CarpoolFinder} />
       </BrowserRouter>
     </div>
   );
