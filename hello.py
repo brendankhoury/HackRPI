@@ -1,16 +1,17 @@
 from cloudant import Cloudant
 from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS
 from math import radians, cos, sin, asin, sqrt
 import psycopg2 as psyc
 import atexit
 import os
 import json
 import requests
-import os
 
 geocodeURL = 'https://maps.googleapis.com/maps/api/geocode/json'
 
 app = Flask(__name__, static_url_path='')
+CORS(app)
 
 db_name = 'mydb'
 client = None
@@ -53,6 +54,7 @@ def db_conn():
     sslmode = "verify-full",
     sslrootcert = certs_path
   )
+  return conn
 
 # On IBM Cloud Cloud Foundry, get the port number from the environment variable PORT
 # When running this app on the local machine, default the port to 8000
@@ -89,10 +91,33 @@ def signup():
     startTime = request.json['startTime']
     endTime = request.json['endTime']
     ownsCar = request.json['ownsCar']
-    with conn.cursor() as cur:
+    home_lat, home_lon = getLocation(homeAdd)
+    work_lat, home_lon = getLocation(workAdd)
+    db_connection = db_conn()
+    with db_connection.cursor() as cur:
         cur.execute(
-        f"INSERT INTO users (name, email, phone, password, homeAdd, workAdd, daysWorked, startTime, endTime, ownsCar) VALUES {name}, {email}, {phone}, {password}, {homeAdd}, {workAdd}, {daysWorked}, {startTime}, {endTime}, {ownsCar}"
+        f"INSERT INTO users (name, email, phone, password, homeAdd, workAdd, daysWorked, startTime, endTime, ownsCar, home_lat, home_lon, work_lat, home_lon) \
+          VALUES {name}, {email}, {phone}, {password}, {homeAdd}, {workAdd}, {daysWorked}, {startTime}, {endTime}, {ownsCar}, {home_lat}, {home_lon}, {work_lat}, {home_lon}"
         )
+    db_connection.close()
+
+@app.route('/api/signin', methods=['GET', 'POST'])
+def signin():
+    db_connection = db_conn()
+    user_email = request.json['email']
+    user_password = request.json['password']
+    with db_connection.cursor() as cur:
+        cur.execute(f"SELECT password FROM Users WHERE email = '{user_email}'")
+        password = cur.fetchone()
+        if (password == user_password):
+            return True
+        else:
+            return False
+    db_connection.close()
+            
+    
+
+
 
 # /**
 #  * Endpoint to get a JSON array of all the visitors in the database
