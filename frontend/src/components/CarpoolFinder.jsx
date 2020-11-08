@@ -6,6 +6,11 @@ import BadLogin from '../SingletonDataStore'
 
 const fakeData = [
     {
+        "Name": "Zarah Z",
+        "AproxDist": "0.6 mile",
+        "Email": "amy@example.com"
+    },
+    {
         "Name": "Amy A",
         "AproxDist": "1 mile",
         "Email": "amy@example.com"
@@ -24,9 +29,9 @@ const fakeData = [
 
 export default class CarpoolFinder extends Component {
     componentDidMount() {
-        fetch("/api/visitors", {
-            body: BadLogin.getLogin()
-        }).then((response) => {this.setState({"carpoolData": response.json()})} )
+        // fetch("/api/visitors", {
+            // body: BadLogin.getLogin()
+        // }).then((response) => {this.setState({"carpoolData": response.json()})} )
     }
     render() {
         return (

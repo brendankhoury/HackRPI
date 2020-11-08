@@ -31,9 +31,9 @@ class SignUp extends Component {
     submissionHandler = (event) => {
         event.preventDefault();
         var daysWorkedString = ""
-        for (var day in this.state.daysWorked) {
-            daysWorkedString += this.state.daysWorked[day] ? '1' : '0'
-        }
+        // for (var day in this.state.daysWorked) {
+        //     daysWorkedString += this.state.daysWorked[day] ? '1' : '0'
+        // }
         var finalObject = {
             "name": this.state["first-name"] + " " + this.state["last-name"],
             "email": this.state.email,
