@@ -12,6 +12,9 @@ geocodeURL = 'https://maps.googleapis.com/maps/api/geocode/json'
 
 app = Flask(__name__, static_url_path='')
 CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
+
+certs_path = os.getcwd() + "/certs/bouncy-panda-ca.crt"
 
 db_name = 'mydb'
 client = None
@@ -70,7 +73,7 @@ def root():
 # *     "name": "Bob"
 # * }
 # */
-@app.route('/api/visitors', methods=['GET'])
+@app.route('/api/visitors', methods=['GET', 'POST'])
 def get_visitor():
     if client:
         return jsonify(list(map(lambda doc: doc['name'], db)))
@@ -81,41 +84,57 @@ def get_visitor():
 
 @app.route('/api/signup', methods=['POST'])
 def signup():
-    name = request.json['name']
-    email = request.json['email']
-    phone = request.json['phone']
-    password = request.json['password']
-    homeAdd = request.json['homeAdd']
-    workAdd = request.json['workAdd']
-    daysWorked = request.json['daysWorked']
-    startTime = request.json['startTime']
-    endTime = request.json['endTime']
-    ownsCar = request.json['ownsCar']
+    requestvals = request.get_json()
+    print(requestvals)
+    name = requestvals['name']
+    email = requestvals['email']
+    phone = requestvals['phone']
+    password = requestvals['password']
+    homeAdd = requestvals['homeAdd']
+    workAdd = requestvals['workAdd']
+    daysWorked = requestvals['daysWorked']
+    startTime = requestvals['startTime']
+    endTime = requestvals['endTime']
+    ownsCar = requestvals['ownsCar']
     home_lat, home_lon = getLocation(homeAdd)
-    work_lat, home_lon = getLocation(workAdd)
+    work_lat, work_lon = getLocation(workAdd)
     db_connection = db_conn()
     with db_connection.cursor() as cur:
         cur.execute(
-        f"INSERT INTO users (name, email, phone, password, homeAdd, workAdd, daysWorked, startTime, endTime, ownsCar, home_lat, home_lon, work_lat, home_lon) \
-          VALUES {name}, {email}, {phone}, {password}, {homeAdd}, {workAdd}, {daysWorked}, {startTime}, {endTime}, {ownsCar}, {home_lat}, {home_lon}, {work_lat}, {home_lon}"
+        f"INSERT INTO users (email, name, password, homeAdd, workAdd, daysWorked, startTime, endTime, ownsCar, home_lat, home_lon, work_lat, work_lon) \
+          VALUES ('{email}', '{name}', '{password}', '{homeAdd}', '{workAdd}', 'mwf', '{startTime}', '{endTime}', {ownsCar}, {home_lat}, {home_lon}, {work_lat}, {work_lon})"
         )
     db_connection.close()
+    return "200"
 
 @app.route('/api/signin', methods=['GET', 'POST'])
 def signin():
     db_connection = db_conn()
-    user_email = request.json['email']
-    user_password = request.json['password']
+    user_email = request.values['email']
+    print(user_email)
+    user_password = request.values['password']
     with db_connection.cursor() as cur:
         cur.execute(f"SELECT password FROM Users WHERE email = '{user_email}'")
         password = cur.fetchone()
         if (password == user_password):
-            return True
+            return "true"
         else:
-            return False
+            return ""
     db_connection.close()
-            
-    
+
+
+@app.route('/api/getclose', methods=['POST'])
+def getclose():
+    db_connection = db_conn()
+    user_email = request.values.get('email')
+    with db_connection.cursor() as cur:
+        cur.execute(f"SELECT * FROM users WHERE email = '{user_email}'")
+        curUser = cur.fetchone()
+        print(curUser)
+        cur.execute(f"SELECT (name, email) FROM users ORDER BY SQRT( POW({curUser['home_lat']} - home_lat, 2) + POW({curUser['home_lon']} - home_lon, 2) )")
+        closestUsers = cur.fetchAll()
+        print(closestUsers)
+
 
 
 
@@ -177,6 +196,5 @@ def haversine(lon1, lat1, lon2, lat2):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=port, debug=True)
-    certs_path = os.getcwd() + "/certs/bouncy-panda-ca.crt"
     print(certs_path)
     db_conn()

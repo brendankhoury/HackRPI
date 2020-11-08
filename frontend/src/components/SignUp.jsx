@@ -21,6 +21,7 @@ class SignUp extends Component {
         "daysWorked": { "Monday": true, "Tuesday": true, "Wednesday": true, "Thursday": true, "Friday": true, "Saturday": false, "Sunday": false },
         "work-start-time": "08:00",
         "work-end-time": "05:00",
+        "phone": "",
         "ownsCar": false
     }
     myChangeHandler = (event) => {
@@ -30,12 +31,12 @@ class SignUp extends Component {
     }
     submissionHandler = (event) => {
         event.preventDefault();
-        var daysWorkedString = ""
+        //var daysWorkedString = ""
         // for (var day in this.state.daysWorked) {
         //     daysWorkedString += this.state.daysWorked[day] ? '1' : '0'
         // }
         var finalObject = {
-            "name": this.state["first-name"] + " " + this.state["last-name"],
+            "name": this.state.firstname + " " + this.state["last-name"],
             "email": this.state.email,
             "phone": this.state.phone,
             "password": this.state.password,
@@ -46,11 +47,13 @@ class SignUp extends Component {
             "startTime": this.state["work-start-time"],
             "endTime": this.state["work-end-time"]
         }
+        console.log(finalObject)
         BadLogin.setLogin(this.state.email, this.state.password)
-        fetch('/api/signup', {
+        fetch('http://localhost:8000/api/signup', {
             method: "POST",
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
             },
             redirect: 'follow',
             body: JSON.stringify(finalObject)
@@ -59,7 +62,9 @@ class SignUp extends Component {
                 window.location.href = '/carpoolfinder'
             }
 
-        )
+        ).catch(error => {
+            console.log(error)
+        })
     }
     daysChangeHandler = (event) => {
         var tmp = this.state.daysWorked
@@ -83,7 +88,7 @@ class SignUp extends Component {
                     <Grid item xs={12}>
                         <Grid container spacing={2}>
                             <Grid item xs={6}>
-                                <TextField onChange={this.myChangeHandler} name="first-name" fullWidth required label="First Name" variant="outlined" />
+                                <TextField onChange={this.myChangeHandler} name="firstname" fullWidth required label="First Name" variant="outlined" />
                             </Grid>
                             <Grid item xs={6}>
                                 <TextField onChange={this.myChangeHandler} name="last-name" fullWidth required label="Last Name" variant="outlined" />

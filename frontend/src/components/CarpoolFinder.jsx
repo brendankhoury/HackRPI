@@ -29,9 +29,18 @@ const fakeData = [
 
 export default class CarpoolFinder extends Component {
     componentDidMount() {
-        // fetch("/api/visitors", {
-            // body: BadLogin.getLogin()
-        // }).then((response) => {this.setState({"carpoolData": response.json()})} )
+      let headers = new Headers();
+
+      headers.append('Content-Type', 'application/json');
+      headers.append('Accept', 'application/json');
+      headers.append('Origin','http://localhost:3000');
+         fetch("http://localhost:8000/api/getclose", {
+             body: BadLogin.getLogin(),
+             method: "POST",
+             headers: {
+                 'Content-Type': 'application/json'
+             }
+         }).then((response) => {this.setState({"carpoolData": response.json()})} )
     }
     render() {
         return (
