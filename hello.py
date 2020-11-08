@@ -1,10 +1,12 @@
 from cloudant import Cloudant
 from flask import Flask, render_template, request, jsonify
 from math import radians, cos, sin, asin, sqrt
+import psycopg2 as psyc
 import atexit
 import os
 import json
 import requests
+import os
 
 geocodeURL = 'https://maps.googleapis.com/maps/api/geocode/json'
 
@@ -41,6 +43,17 @@ elif os.path.isfile('vcap-local.json'):
         client = Cloudant(user, password, url=url, connect=True)
         db = client.create_database(db_name, throw_on_exists=False)
 
+def db_conn():
+  conn = psyc.connect(
+    user = "publicuser",
+    password = "000000000000",
+    host = 'bouncy-panda-64c.gcp-northamerica-northeast1.cockroachlabs.cloud',
+    port = 26257,
+    database = "cpcoordinator",
+    sslmode = "verify-full",
+    sslrootcert = certs_path
+  )
+
 # On IBM Cloud Cloud Foundry, get the port number from the environment variable PORT
 # When running this app on the local machine, default the port to 8000
 port = int(os.getenv('PORT', 8000))
@@ -62,6 +75,24 @@ def get_visitor():
     else:
         print('No database')
         return jsonify([])
+
+
+@app.route('/api/signup', methods=['POST'])
+def signup():
+    name = request.json['name']
+    email = request.json['email']
+    phone = request.json['phone']
+    password = request.json['password']
+    homeAdd = request.json['homeAdd']
+    workAdd = request.json['workAdd']
+    daysWorked = request.json['daysWorked']
+    startTime = request.json['startTime']
+    endTime = request.json['endTime']
+    ownsCar = request.json['ownsCar']
+    with conn.cursor() as cur:
+        cur.execute(
+        f"INSERT INTO users (name, email, phone, password, homeAdd, workAdd, daysWorked, startTime, endTime, ownsCar) VALUES {name}, {email}, {phone}, {password}, {homeAdd}, {workAdd}, {daysWorked}, {startTime}, {endTime}, {ownsCar}"
+        )
 
 # /**
 #  * Endpoint to get a JSON array of all the visitors in the database
@@ -108,7 +139,6 @@ def getLocation(address):
         pass
 
 
-
 def haversine(lon1, lat1, lon2, lat2):
     lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
 
@@ -122,3 +152,6 @@ def haversine(lon1, lat1, lon2, lat2):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=port, debug=True)
+    certs_path = os.getcwd() + "/certs/bouncy-panda-ca.crt"
+    print(certs_path)
+    db_conn()
