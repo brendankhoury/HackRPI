@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Card, CardContent, Fab, Grid, Typography } from '@material-ui/core'
 import MailIcon from '@material-ui/icons/Mail';
 import '../Assets/CarpoolFinder.css'
-
+import BadLogin from '../SingletonDataStore'
 
 const fakeData = [
     {
@@ -23,6 +23,11 @@ const fakeData = [
 ]
 
 export default class CarpoolFinder extends Component {
+    componentDidMount() {
+        fetch("/api/visitors", {
+            body: BadLogin.getLogin()
+        }).then((response) => {this.setState({"carpoolData": response.json()})} )
+    }
     render() {
         return (
             <Grid container className="CarpoolRoot" spacing ={2}>

@@ -2,21 +2,23 @@ import { React, Component } from 'react'
 
 import TextField from '@material-ui/core/TextField';
 import { Button, Checkbox, FormControlLabel, FormGroup, Grid, Typography, withStyles } from '@material-ui/core';
+import BadLogin from '../SingletonDataStore'
+
 
 const styles = ((theme) => ({
     root: {
         display: 'flex',
         flexWrap: 'wrap',
         padding: '2.5em',
-        marginRight:'8%',
-        marginLeft:'8%'
+        marginRight: '8%',
+        marginLeft: '8%'
     },
 }));
 
 
 class SignUp extends Component {
     state = {
-        "daysWorked": {"Monday":true, "Tuesday":true, "Wednesday":true, "Thursday":true, "Friday":true, "Saturday":false, "Sunday":false},
+        "daysWorked": { "Monday": true, "Tuesday": true, "Wednesday": true, "Thursday": true, "Friday": true, "Saturday": false, "Sunday": false },
         "work-start-time": "08:00",
         "work-end-time": "05:00",
         "ownsCar": false
@@ -24,41 +26,54 @@ class SignUp extends Component {
     myChangeHandler = (event) => {
         let nam = event.target.name;
         let val = event.target.value;
-        this.setState({[nam]: val});
+        this.setState({ [nam]: val });
     }
     submissionHandler = (event) => {
         event.preventDefault();
         var daysWorkedString = ""
-        for(var day in this.state.daysWorked) {
-            daysWorkedString += this.state.daysWorked[day] ? '1':'0'
+        for (var day in this.state.daysWorked) {
+            daysWorkedString += this.state.daysWorked[day] ? '1' : '0'
         }
         var finalObject = {
-            "name": this.state["first-name"] + " " + this.state["last-name"], 
-            "email":this.state.email,
-            "phone":this.state.phone,
-            "password":this.state.password,
-            "homeAdd":this.state["home-address"] + " " + this.state["home-city"] + " " + this.state["home-state"] + " " + this.state["home-zip"],
-            "workAdd":this.state["work-address"] + " " + this.state["work-city"] + " " + this.state["work-state"] + " " + this.state["work-zip"],
-            "daysWorked":this.state.daysWorked,
-            "ownsCar":this.state.ownsCar,
-            "startTime":this.state["work-start-time"],
-            "endTime":this.state["work-end-time"]
+            "name": this.state["first-name"] + " " + this.state["last-name"],
+            "email": this.state.email,
+            "phone": this.state.phone,
+            "password": this.state.password,
+            "homeAdd": this.state["home-address"] + " " + this.state["home-city"] + " " + this.state["home-state"] + " " + this.state["home-zip"],
+            "workAdd": this.state["work-address"] + " " + this.state["work-city"] + " " + this.state["work-state"] + " " + this.state["work-zip"],
+            "daysWorked": this.state.daysWorked,
+            "ownsCar": this.state.ownsCar,
+            "startTime": this.state["work-start-time"],
+            "endTime": this.state["work-end-time"]
         }
-        console.log(finalObject)
-    } 
+        BadLogin.setLogin(this.state.email, this.state.password)
+        fetch('/api/signup', {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            redirect: 'follow',
+            body: JSON.stringify(finalObject)
+
+            }).then(response => {
+                window.location.href = '/carpoolfinder'
+            }
+
+        )
+    }
     daysChangeHandler = (event) => {
         var tmp = this.state.daysWorked
         tmp[event.target.value] = event.target.checked
-        this.setState({"daysWorked":tmp})
+        this.setState({ "daysWorked": tmp })
     }
     carChangeHandler = (event) => {
-        this.setState({"ownsCar":event.target.checked})
+        this.setState({ "ownsCar": event.target.checked })
     }
     render() {
-        const { classes } = this.props; 
+        const { classes } = this.props;
         return (
             <form className={classes.root} onSubmit={this.submissionHandler}>
-    
+
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
                         <Typography variant='h5'>
@@ -71,27 +86,27 @@ class SignUp extends Component {
                                 <TextField onChange={this.myChangeHandler} name="first-name" fullWidth required label="First Name" variant="outlined" />
                             </Grid>
                             <Grid item xs={6}>
-                                <TextField onChange={this.myChangeHandler}name="last-name" fullWidth required label="Last Name" variant="outlined" />
+                                <TextField onChange={this.myChangeHandler} name="last-name" fullWidth required label="Last Name" variant="outlined" />
                             </Grid>
                         </Grid>
                     </Grid>
                     <Grid item xs={12}>
                         <Grid container spacing={2}>
                             <Grid item xs={6}>
-                                <TextField onChange={this.myChangeHandler}name="email" fullWidth required label="Work Email" variant="outlined" />
+                                <TextField onChange={this.myChangeHandler} name="email" fullWidth required label="Work Email" variant="outlined" />
                             </Grid>
                             <Grid item xs={6}>
-                                <TextField onChange={this.myChangeHandler}name="phone" fullWidth label="Phone Number" variant="outlined" />
+                                <TextField onChange={this.myChangeHandler} name="phone" fullWidth label="Phone Number" variant="outlined" />
                             </Grid>
                         </Grid>
                     </Grid>
                     <Grid item xs={12}>
                         <Grid container spacing={2}>
                             <Grid item xs={6}>
-                                <TextField onChange={this.myChangeHandler}name="password" type="password" fullWidth required password label="Password" variant="outlined" />
+                                <TextField onChange={this.myChangeHandler} name="password" type="password" fullWidth required password label="Password" variant="outlined" />
                             </Grid>
                             <Grid item xs={6}>
-                                <TextField onChange={this.myChangeHandler}name="confirm-password" type="password" fullWidth required password label="Confirm Password" variant="outlined" />
+                                <TextField onChange={this.myChangeHandler} name="confirm-password" type="password" fullWidth required password label="Confirm Password" variant="outlined" />
                             </Grid>
                         </Grid>
                     </Grid>
@@ -128,19 +143,19 @@ class SignUp extends Component {
                     <Grid item xs={12}>
                         <Grid container spacing={2}>
                             <Grid item xs={4}>
-                                <TextField onChange={this.myChangeHandler}name="work-address" fullWidth required label="Address" variant="outlined" />
+                                <TextField onChange={this.myChangeHandler} name="work-address" fullWidth required label="Address" variant="outlined" />
                             </Grid>
                             <Grid item xs={4}>
-                                <TextField onChange={this.myChangeHandler}name="work-city" fullWidth required label="City" variant="outlined" />
+                                <TextField onChange={this.myChangeHandler} name="work-city" fullWidth required label="City" variant="outlined" />
                             </Grid>
                             <Grid item xs={4}>
-                                <TextField onChange={this.myChangeHandler}name="work-zip" fullWidth required label="Zip Code" variant="outlined" />
+                                <TextField onChange={this.myChangeHandler} name="work-zip" fullWidth required label="Zip Code" variant="outlined" />
                             </Grid>
                             <Grid item xs={6}>
-                                <TextField onChange={this.myChangeHandler}name="work-state" fullWidth required label="State" variant="outlined" />
+                                <TextField onChange={this.myChangeHandler} name="work-state" fullWidth required label="State" variant="outlined" />
                             </Grid>
                             <Grid item xs={6}>
-                                <TextField onChange={this.myChangeHandler}name="work-country" fullWidth required label="Country" variant="outlined" />
+                                <TextField onChange={this.myChangeHandler} name="work-country" fullWidth required label="Country" variant="outlined" />
                             </Grid>
                         </Grid>
                     </Grid>

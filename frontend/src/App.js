@@ -10,7 +10,7 @@ import Login from './components/Login';
 import { Route } from 'react-router';
 import { BrowserRouter, Link } from 'react-router-dom';
 import CarpoolFinder from './components/CarpoolFinder';
-
+import BadLogin from './SingletonDataStore'
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -35,16 +35,22 @@ function App() {
             <Typography variant="h6" className={classes.title}>
               Carpool Coordinator
             </Typography>
-            <Button component={Link} to="/login" color="inherit">
-              Login
-              </Button>
+            { 
+              BadLogin.getLogin().email === "" ? (            
+                <Button component={Link} to="/login" color="inherit">
+                  Login
+                </Button>
+              ) : (
+                <Button component={Link} to="/carpoolfinder" color="inherit">
+                  Find Carpool
+                </Button>
+              )
+            }
+
           </Toolbar>
         </AppBar>
         <Route exact path="/" component={SignUp} />
         <Route exact path="/login" component={Login} />
-        <Route exact path="/profile">
-          Profile not created yet
-        </Route>
         <Route exact path="/carpoolfinder" component={CarpoolFinder} />
       </BrowserRouter>
     </div>
